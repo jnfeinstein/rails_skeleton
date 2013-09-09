@@ -1,0 +1,10 @@
+<% if @user.errors.any? %>
+	<h2><%= @user.errors.full_messages.first %></h2>
+<% end %>
+<%= form_for @user, url: {action: "create"},
+					html: {class: "form_new_user"},
+					method: "post" do |f| %>
+  <%= f.label :email %>
+  <%= f.text_field :email %>
+  <%= f.submit "Create" %>
+<% end %>

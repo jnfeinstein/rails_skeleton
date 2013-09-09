@@ -19,7 +19,8 @@ development:
   encoding: unicode
   database: budget_development
   pool: 5
-  username: budget
+  host: localhost
+  username:
   password:
 
   # Connect on a TCP socket. Omitted by default since the client uses a
