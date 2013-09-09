@@ -1,11 +1,14 @@
 class UserController < ApplicationController
+  include ApplicationHelper
+  
   def index
   end
 
   def create
     @user = User.new(user_params)
+    @user.password = params[:password]
     if @user.save
-      redirect_to root_url
+      do_authentication(@user)
     else
       render 'new'
     end

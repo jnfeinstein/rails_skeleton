@@ -20,4 +20,16 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    attributes:
+      user:
+        email: "email address"
+        password_hash: "password"
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "is required"
+            password_hash:
+              blank: "is required"

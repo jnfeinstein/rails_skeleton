@@ -1,2 +1,15 @@
 <h1>bujit.me</h1>
-<p>Find me in app/views/user/index.html.erb</p>
+<% if current_user %>
+  <p>
+    <%= link_to "logout", log_out_path %>
+  </p>
+<% else %>
+  <p>
+    <%= link_to "sign up", sign_up_path %>
+    <%= link_to "login", log_in_path %>
+  </p>
+<% end %>
+
+<% flash.each do |name, msg| %>
+  <%= content_tag :div, msg, :id => "flash_#{name}" %>
+<% end %>
