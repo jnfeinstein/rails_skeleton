@@ -1,0 +1,17 @@
+<h1>set bujit</h1>
+
+<%= form_for @bujit, url: {action: "update"},
+          html: {class: "form_update_bujit"},
+          method: "put" do |b| %>
+  <p>
+    <%= b.label :amount %>
+    <%= b.text_field :amount %>
+  </p>
+  <p>
+    <%= b.submit "submit" %>
+  </p>
+<% end %>
+
+<% if @bujit.errors.any? %>
+  <h2><%= @bujit.errors.full_messages.first %></h2>
+<% end %>

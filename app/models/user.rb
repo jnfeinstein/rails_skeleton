@@ -14,20 +14,21 @@ require 'bcrypt'
 class User < ActiveRecord::Base
 	include BCrypt
 
+  has_one :bank, dependent: :destroy, autosave: true, inverse_of: :user
+  has_one :bujit, dependent: :destroy, autosave: true, inverse_of: :user
+  has_many :transactions, dependent: :destroy, inverse_of: :user
 	validates :email, presence: true, uniqueness: true
   validates :password_hash, presence: true
-
-  has_one :bank, dependent: :destroy, autosave: true, inverse_of: :user
-
-  before_create :build_default_bank
+  before_create :build_default_associations
 
   def self.authenticate(user_email, user_password)
     user = User.find_by_email(user_email)
     user if user && user.password == user_password
   end
 
-  def build_default_bank
+  def build_default_associations
     self.build_bank
+    self.build_bujit
   end
 
 	def password
@@ -37,4 +38,9 @@ class User < ActiveRecord::Base
 	def password=(new_password)
 	  self.password_hash = Password.create(new_password)
 	end
+
+  def added_new_transaction(transaction)
+    puts "FISH"
+    self.bank.add_amount_to_total(self.bujit.amount - transaction.amount)
+  end
 end

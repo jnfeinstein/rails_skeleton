@@ -1,0 +1,17 @@
+<h1>modify bank</h1>
+
+<%= form_for @bank, url: {action: "update"},
+          html: {class: "form_update_bank"},
+          method: "put" do |b| %>
+  <p>
+    <%= b.label :total %>
+    <%= b.text_field :total %>
+  </p>
+  <p>
+    <%= b.submit "submit" %>
+  </p>
+<% end %>
+
+<% if @bank.errors.any? %>
+  <h2><%= @bank.errors.full_messages.first %></h2>
+<% end %>

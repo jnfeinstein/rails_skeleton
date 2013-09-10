@@ -3,6 +3,7 @@ class SessionController < ApplicationController
     if user = User.authenticate(params[:email], params[:password])
       do_authentication(user)
     else
+      flash.now[:invalid] = 'User does not exist or password is incorrect'
       render 'new'
     end
   end

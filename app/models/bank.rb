@@ -11,5 +11,10 @@
 
 class Bank < ActiveRecord::Base
   belongs_to :user, inverse_of: :bank
-  has_many :transactions, inverse_of: :bank
+  validates :user_id, presence: true
+
+  def add_amount_to_total(amount)
+    self.total += amount
+    self.save
+  end
 end

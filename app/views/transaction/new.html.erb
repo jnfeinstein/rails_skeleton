@@ -1,0 +1,17 @@
+<h1>spent money</h1>
+
+<%= form_for @transaction, url: {action: "create"},
+          html: {class: "form_new_transaction"},
+          method: "post" do |t| %>
+  <p>
+    <%= t.label :amount %>
+    <%= t.text_field :amount %>
+  </p>
+  <p>
+    <%= t.submit "submit" %>
+  </p>
+<% end %>
+
+<% if @transaction.errors.any? %>
+  <h2><%= @transaction.errors.full_messages.first %></h2>
+<% end %>
