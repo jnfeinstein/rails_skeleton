@@ -11,14 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130910053307) do
+ActiveRecord::Schema.define(version: 20130910055904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "banks", force: true do |t|
     t.integer  "user_id"
-    t.float    "total"
+    t.float    "total",      default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

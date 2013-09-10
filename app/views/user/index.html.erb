@@ -1,8 +1,7 @@
 <h1>bujit.me</h1>
 <% if current_user %>
-  <p>
-    <%= link_to "logout", log_out_path %>
-  </p>
+  <p>You have saved <%= number_to_currency(current_user.bank.total) %></p>
+  <p><%= link_to "logout", log_out_path %></p>
 <% else %>
   <p>
     <%= link_to "sign up", sign_up_path %>

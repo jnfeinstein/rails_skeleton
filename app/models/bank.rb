@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer
-#  total      :float
+#  total      :float            default(0.0)
 #  created_at :datetime
 #  updated_at :datetime
 #
