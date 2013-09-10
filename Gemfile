@@ -49,6 +49,10 @@ end
 # Heroku says we need this
 gem 'rails_12factor', group: :production
 
+# Heroku addons
+gem 'newrelic_rpm'
+
 # Mine
 gem 'annotate', ">=2.5.0", group: :development
 gem 'bcrypt-ruby'
+
