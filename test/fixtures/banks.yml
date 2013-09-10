@@ -1,12 +1,12 @@
 # == Schema Information
 #
-# Table name: users
+# Table name: banks
 #
-#  id            :integer          not null, primary key
-#  created_at    :datetime
-#  updated_at    :datetime
-#  email         :string(255)
-#  password_hash :string(255)
+#  id         :integer          not null, primary key
+#  user_id    :integer
+#  total      :float
+#  created_at :datetime
+#  updated_at :datetime
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html

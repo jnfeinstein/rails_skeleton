@@ -1,6 +1,4 @@
-<% if @user.errors.any? %>
-	<h2><%= @user.errors.full_messages.first %></h2>
-<% end %>
+<h1>sign up</h1>
 <p>
   <%= form_for @user, url: {action: "create"},
   					html: {class: "form_new_user"},
@@ -18,3 +16,7 @@
     </p>
   <% end %>
 </p>
+
+<% if @user.errors.any? %>
+  <h2><%= @user.errors.full_messages.first %></h2>
+<% end %>
