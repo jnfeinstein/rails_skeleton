@@ -11,4 +11,5 @@
 
 class Bank < ActiveRecord::Base
   belongs_to :user, inverse_of: :bank
+  has_many :transactions, inverse_of: :bank
 end
