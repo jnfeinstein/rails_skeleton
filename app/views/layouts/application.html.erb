@@ -13,12 +13,11 @@
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <!-- apple touch icon -->
-  <link rel="apple-touch-icon" href="apple-touch-icon-iphone.png" /> 
-  <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-ipad.png" /> 
-  <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-iphone4.png" />
-  <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-ipad3.png" />
   <!-- favicon -->
+  <%= favicon_link_tag 'apple-touch-icon-iphone.png', :rel => 'apple-touch-icon', :type => 'image/png' %>
+  <%= favicon_link_tag 'apple-touch-icon-ipad.png', :rel => 'apple-touch-icon', :type => 'image/png', :size => '72x72' %>
+  <%= favicon_link_tag 'apple-touch-icon-iphone4.png', :rel => 'apple-touch-icon', :type => 'image/png', :size => '114x114' %>
+  <%= favicon_link_tag 'apple-touch-icon-ipad3.png', :rel => 'apple-touch-icon', :type => 'image/png', :size => '144x144' %>
   <%= favicon_link_tag 'favicon.ico' %>
 </head>
 <body>
