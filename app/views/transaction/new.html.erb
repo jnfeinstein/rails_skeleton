@@ -1,17 +1,25 @@
-<h1>spent money</h1>
+<div class="content transaction-new">
+  
+  <div class="header">
+    <h1>spent money</h1>
+  </div>
 
-<%= form_for @transaction, url: {action: "create"},
-          html: {class: "form_new_transaction"},
-          method: "post" do |t| %>
-  <p>
-    <%= t.label :amount %>
-    <%= t.text_field :amount %>
-  </p>
-  <p>
-    <%= t.submit "submit" %>
-  </p>
-<% end %>
+  <div class="body">
+    <%= form_for @transaction, url: {action: "create"},
+              html: {class: "form_new_transaction"},
+              method: "post" do |t| %>
+      <div class="input-group">
+        <%= t.label :amount, "How much did you spend?" %>
+        <%= t.text_field :amount, :class => 'form-control' %>
+      </div><br/>
+      <%= t.submit "submit" %>
+    <% end %>
+  </div>
 
-<% if @transaction.errors.any? %>
-  <h2><%= @transaction.errors.full_messages.first %></h2>
-<% end %>
+  <div class="footer">
+    <% if @transaction.errors.any? %>
+      <h5><%= @transaction.errors.full_messages.first %></h5>
+    <% end %>
+  </div>
+  
+</div>

@@ -1,16 +1,37 @@
-<h1>bujit.me</h1>
-<% if current_user %>
-  <p>Your bujit is <%= number_to_currency(current_user.bujit.amount) %></p>
-  <p>You bank has <%= number_to_currency(current_user.bank.total) %></p>
-  <p><%= link_to "spent money", new_transaction_path %></p>
-  <p><%= link_to "set bujit", edit_bujit_path(current_user.bujit) %></p>
-  <p><%= link_to "modify bank", edit_bank_path(current_user.bank) %></p>
-  <p><%= link_to "logout", log_out_path %></p>
-<% else %>
-  <p><%= link_to "sign up", sign_up_path %></p>
-  <p><%= link_to "login", log_in_path %></p>
-<% end %>
+<div class="content user-index">
+  
+  <div class="header">
+    <h1>bujit.me</h1>
+  </div>
 
-<% flash.each do |name, msg| %>
-  <h2><%= content_tag :div, msg, :id => "flash_#{name}" %></h2>
-<% end %>
+  <div class="body">
+    <% if current_user %>
+      <div class="stats">
+        <text>Your daily bujit is <%= number_to_currency(current_user.bujit.amount) %></text><br/>
+        <% unless @no_bujit %>
+          <text>You bank has <%= number_to_currency(current_user.bank.total) %></text>
+        <% end %>
+      </div>
+      <% unless @no_bujit %>
+        <%= link_to "i spent money today", new_transaction_path, :class => 'btn' %>
+      <% end %>
+      <%= link_to "set daily bujit", edit_bujit_path(current_user.bujit), :class => 'btn'  %>
+      <% unless @no_bujit %>
+        <%= link_to "modify bank", edit_bank_path(current_user.bank), :class => 'btn'  %>
+      <% end %>
+      <%= link_to "logout", log_out_path, :class => 'btn'  %>
+    <% else %>
+      <%= link_to "sign up", sign_up_path, :class => 'btn'  %>
+      <%= link_to "login", log_in_path, :class => 'btn'  %>
+    <% end %>
+  </div>
+
+  <div class="footer">
+    <% flash.each do |name, msg| %>
+      <div class="flash">
+        <h5><%= content_tag :div, msg, :id => "flash_#{name}" %></h5>
+      </div>
+    <% end %>
+  </div>
+  
+</div>

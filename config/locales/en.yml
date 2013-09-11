@@ -31,5 +31,6 @@ en:
           attributes:
             email:
               blank: "is required"
+              taken: "is used"
             password_hash:
               blank: "is required"

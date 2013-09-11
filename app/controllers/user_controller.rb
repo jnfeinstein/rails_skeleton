@@ -4,7 +4,13 @@ class UserController < ApplicationController
   def index
     if current_user
       # check if they have no budget
-      flash.now[:budget_is_not_set] = "Your bujit is $0? Set a bujit!" if current_user.bujit.amount_is_not_set?
+      @no_bujit = current_user.bujit.amount_is_not_set?
+      if @no_bujit
+        flash.now[:no_bujit] = "You need to set a daily bujit!"
+      else
+        flash.now[:spent_money] = "Did you spend money today?"
+      end
+
     end
   end
 

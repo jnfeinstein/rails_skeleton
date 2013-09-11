@@ -1,17 +1,24 @@
-<h1>set bujit</h1>
+<div class="content bujit-edit">
+  
+  <div class="header">
+    <h1>set bujit</h1>
+  </div>
 
-<%= form_for @bujit, url: {action: "update"},
-          html: {class: "form_update_bujit"},
-          method: "put" do |b| %>
-  <p>
-    <%= b.label :amount %>
-    <%= b.text_field :amount %>
-  </p>
-  <p>
-    <%= b.submit "submit" %>
-  </p>
-<% end %>
+  <div class="body">
+    <%= form_for @bujit, url: {action: "update"},
+              html: {class: "form_update_bujit"},
+              method: "put" do |b| %>
+      <div class="input-group">
+        <%= b.label :amount, "How much can you spend?" %>
+        <%= b.text_field :amount, :class => 'form-control' %>
+      </div><br/>
+      <%= b.submit "submit" %>
+    <% end %>
+  </div>
 
-<% if @bujit.errors.any? %>
-  <h2><%= @bujit.errors.full_messages.first %></h2>
-<% end %>
+  <div class="footer">
+    <% if @bujit.errors.any? %>
+      <h5><%= @bujit.errors.full_messages.first %></h5>
+    <% end %>
+  </div>
+</div>

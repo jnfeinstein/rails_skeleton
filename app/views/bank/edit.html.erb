@@ -1,17 +1,22 @@
-<h1>modify bank</h1>
+<div class="content bank-edit">
+  
+  <div class="header">
+    <h1>modify bank</h1>
+  </div>
 
-<%= form_for @bank, url: {action: "update"},
-          html: {class: "form_update_bank"},
-          method: "put" do |b| %>
-  <p>
-    <%= b.label :total %>
-    <%= b.text_field :total %>
-  </p>
-  <p>
-    <%= b.submit "submit" %>
-  </p>
-<% end %>
+  <div class="body">
+    <%= form_for @bank, url: {action: "update"},
+              html: {class: "form_update_bank"},
+              method: "put" do |b| %>
+      <div class="input-group">
+        <%= b.label :total, "How much is in your bank?" %>
+        <%= b.text_field :total, :class => 'form-control' %>
+      </div><br/>
+      <%= b.submit "submit" %>
+    <% end %>
+  </div>
 
-<% if @bank.errors.any? %>
-  <h2><%= @bank.errors.full_messages.first %></h2>
-<% end %>
+  <% if @bank.errors.any? %>
+    <h2><%= @bank.errors.full_messages.first %></h2>
+  <% end %>
+</div>

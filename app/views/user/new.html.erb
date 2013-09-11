@@ -1,21 +1,29 @@
-<h1>sign up</h1>
+<div class="content user-new">
+  
+  <div class="header">
+    <h1>sign up</h1>
+  </div>
 
-<%= form_for @user, url: {action: "create"},
-					html: {class: "form_new_user"},
-					method: "post" do |f| %>
-  <p>
-    <%= f.label :email %>
-    <%= f.text_field :email %>
-  </p>
-  <p>
-    <%= label_tag :password %>
-    <%= password_field_tag :password %>
-  </p>
-  <p>
-    <%= f.submit "create" %>
-  </p>
-<% end %>
+  <div class="body">
+    <%= form_for @user, url: {action: "create"},
+    					html: {class: "form-horizontal"},
+    					method: "post" do |f| %>
+      <div class="form-group">
+        <%= f.label :email, "What's your email address?" %>
+        <%= f.text_field :email, :class => 'form-control', :placeholder => 'Email' %>
+      </div>
+      <div class="form-group">
+        <%= label_tag :password, "What's your password?" %>
+        <%= password_field_tag :password, '', :class => 'form-control', :placeholder => 'Password' %>
+      </div><br/>
+        <%= submit_tag "create" %>
+    <% end %>
+  </div>
 
-<% if @user.errors.any? %>
-  <h2><%= @user.errors.full_messages.first %></h2>
-<% end %>
+  <div class="footer">
+    <% if @user.errors.any? %>
+      <h5><%= @user.errors.full_messages.first %></h5>
+    <% end %>
+  </div>
+  
+</div>
