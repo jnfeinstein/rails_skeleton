@@ -13,7 +13,7 @@
         <% end %>
       </div>
       <% unless @no_bujit %>
-        <%= link_to "i spent money today", new_transaction_path, :class => 'btn' %>
+        <%= link_to "enter amount spent", new_transaction_path, :class => 'btn' %>
       <% end %>
       <%= link_to "set daily bujit", edit_bujit_path(current_user.bujit), :class => 'btn'  %>
       <% unless @no_bujit %>
@@ -33,5 +33,5 @@
       </div>
     <% end %>
   </div>
-  
+
 </div>
