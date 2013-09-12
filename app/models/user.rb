@@ -44,8 +44,13 @@ class User < ActiveRecord::Base
 	  self.password_hash = Password.create(new_password)
 	end
 
-  def added_new_transaction(transaction)
-    puts "FISH"
-    self.bank.add_amount_to_total(self.bujit.amount - transaction.amount)
+  def build_new_transaction(params = [], creator = self)
+    new_transaction = self.transactions.build(params)
+    new_transaction.creator = creator
+    new_transaction
+  end
+
+  def do_after_transaction_created(transaction)
+    self.bank.apply_new_transaction(transaction)
   end
 end

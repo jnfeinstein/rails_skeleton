@@ -4,7 +4,7 @@ class TransactionController < ApplicationController
   end
 
   def create
-    @transaction = current_user.transactions.build(transaction_params)
+    @transaction = current_user.build_new_transaction(transaction_params, current_user)
     if @transaction.save
       redirect_to root_url
     else
