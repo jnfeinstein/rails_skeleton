@@ -12,7 +12,7 @@
 #
 
 class Bujit < ActiveRecord::Base
-  has_many :transactions, as: :creator
+  has_many :transactions, as: :creator, inverse_of: :creator
   belongs_to :user, inverse_of: :bujit
   validates :user_id, presence: true
 
