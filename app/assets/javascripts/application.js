@@ -12,5 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require backbone
+//= require backbone.epoxy
 //= require turbolinks
 //= require_tree .
