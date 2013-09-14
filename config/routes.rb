@@ -1,6 +1,5 @@
 Budget::Application.routes.draw do
-  get "log_out" => "session#destroy", :as => "log_out"
-  get "log_in" => "session#new", :as => "log_in"
+  get "auth" => "session#new", :as => "auth"
   get "sign_up" => "user#new", :as => "sign_up"
 
   resources :user
