@@ -12,25 +12,28 @@
  *= require_tree .
  */
 
-div{
-  clear:both!important;
-  display:block!important;
-  width:100%!important;
-  float:none!important;
-  margin:0!important;
-  padding:0!important;
+div {
+  clear: both;
+  display: block;
+  width: 100%;
+  float: none;
+  margin: 0;
+  padding: 0;
 }
-img{
-  max-width:100%;
-  height:auto;
+img {
+  max-width: 100%;
+  height: auto;
 }
-div *{
-  text-align:center;
-  width:100%;
-  height:auto; 
-  padding:6px 12px;
+div * {
+  text-align: center;
+  width: 100%;
+  height: auto;
 }
 
-div.content.main{
-  max-width:250px;
+div.content.main {
+  max-width: 250px;
+}
+
+.template {
+  display: none;
 }

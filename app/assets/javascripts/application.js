@@ -12,7 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.cookie
+//= require underscore
 //= require backbone
 //= require backbone.epoxy
+//= require bootstrap
+//= require main
 //= require turbolinks
-//= require_tree .
