@@ -20,11 +20,10 @@ class UserController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    @user.password = params[:password]
     if @user.save
-      do_authentication(@user)
+      render :success
     else
-      render 'new'
+      render_failure
     end
   end
 
@@ -43,6 +42,6 @@ class UserController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:email)
+    params.require(:user).permit(:email, :password)
   end
 end

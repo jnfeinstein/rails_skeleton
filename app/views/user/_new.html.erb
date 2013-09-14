@@ -5,25 +5,18 @@
   </div>
 
   <div class="body">
-    <%= form_for @user, url: {action: "create"},
-    					html: {class: "form-horizontal"},
-    					method: "post" do |f| %>
-      <div class="form-group">
-        <%= f.label :email, "What's your email address?" %>
-        <%= f.text_field :email, :class => 'form-control', :placeholder => 'Email' %>
-      </div>
-      <div class="form-group">
-        <%= label_tag :password, "What's your password?" %>
-        <%= password_field_tag :password, '', :class => 'form-control', :placeholder => 'Password' %>
-      </div><br/>
-        <%= submit_tag "create" %>
-    <% end %>
+    <div class="input-group">
+      <label for="email">What's your email address?</label>
+      <input class="form-control" id="email" name="email" type="text">
+    </div>
+    <div class="input-group">
+      <label for="password">What's your password?</label>
+      <input class="form-control" id="password" name="password" type="password">
+    </div>
+    <button class="btn btn-default">submit</button>
   </div>
 
   <div class="footer">
-    <% if @user.errors.any? %>
-      <h5><%= @user.errors.full_messages.first %></h5>
-    <% end %>
   </div>
   
 </div>
