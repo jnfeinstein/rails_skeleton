@@ -14,6 +14,10 @@ Budget::Application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'welcome#index'
 
+  if Rails.env.production?
+    get "/application.manifest" => Rails::Offline
+  end
+  
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

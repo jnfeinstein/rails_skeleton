@@ -21,10 +21,10 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails'
+# gem 'jquery-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+# gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
@@ -44,7 +44,7 @@ end
 # gem 'capistrano', group: :development
 
 # Use debugger
-# gem 'debugger', group: [:development, :test]
+gem 'debugger', group: [:development, :test]
 
 # Heroku says we need this
 gem 'rails_12factor', group: :production
@@ -54,5 +54,5 @@ gem 'newrelic_rpm'
 
 # Mine
 gem 'annotate', ">=2.5.0", group: :development
-gem 'debugger', group: :development
 gem 'bcrypt-ruby'
+gem 'rack-offline', :git => 'https://github.com/wycats/rack-offline.git' 
