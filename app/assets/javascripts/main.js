@@ -220,6 +220,7 @@ window.budget = (function($){
       this.model.on('error', this.onError);
     },
     submit: function(e) {
+      _budget.set_loading(true);
       this.model.save(null, {url: 'session'});
     },
     onSync: function(model, data, options) {
