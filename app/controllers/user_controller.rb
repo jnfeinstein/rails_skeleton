@@ -1,6 +1,4 @@
 class UserController < ApplicationController
-  include ApplicationHelper
-
   skip_before_filter :check_token, :only => ['create']
 
   def create

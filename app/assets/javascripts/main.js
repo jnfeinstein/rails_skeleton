@@ -254,7 +254,8 @@ window.budget = (function($){
     },
     onSync: function(model, data, options) {
       _budget.app_router.navigate('', true);
-      _budget.set_loading(false);
+      _budget.user.fetch();
+      _budget.load_until_user_fetched();
     },
     onError: function(model, errors, options) {
       _budget.clear_errors();

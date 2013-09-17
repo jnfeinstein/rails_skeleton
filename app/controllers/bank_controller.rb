@@ -3,6 +3,10 @@ class BankController < ApplicationController
     render :json => current_user.bank.to_json
   end
 
+  def show
+    return index
+  end
+
   def update
     if current_user.update_bank(bank_params)
       render :json => current_user.bank.to_json

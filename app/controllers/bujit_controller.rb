@@ -3,6 +3,10 @@ class BujitController < ApplicationController
     render :json => current_user.bujit.to_json
   end
 
+  def show
+    return index
+  end
+
   def update
     if current_user.update_bujit(bujit_params)
       render :json => current_user.bujit.to_json
