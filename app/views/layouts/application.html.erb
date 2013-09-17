@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html manifest ="/application.manifest">
+<% if Rails.env.product? %>
+  <html manifest ="/application.manifest">
+<% else %>
+  <html>
+<% end %>
   <head>
     <title>bujit</title>
     <%= stylesheet_link_tag    "application", media: "all" %>
