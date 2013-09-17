@@ -34,6 +34,13 @@ div.content.main {
   max-width: 250px;
 }
 
+div.loading {
+  height: 32px;
+  width: 32px;
+  margin: auto;
+
+}
+
 .template {
   display: none;
 }

@@ -1,5 +1,7 @@
 class SessionController < ApplicationController
 
+  skip_before_filter :check_token, :only => ['create']
+  
   def create
     user = User.find_by_email(params[:email])
     if user.nil?
