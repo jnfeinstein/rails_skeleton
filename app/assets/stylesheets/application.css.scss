@@ -29,18 +29,22 @@ div * {
   width: 100%;
   height: auto;
 }
-
 div.content.main {
-  max-width: 250px;
+  max-width: 234px;
+  margin: 5px 8px 5px 8px;
 }
-
 div.loading {
   height: 32px;
   width: 32px;
   margin: auto;
 
 }
-
-.template {
+div.template {
   display: none;
+}
+div.input-group * {
+  margin: 5px 0px;
+}
+button.submit {
+  margin: 10px 0px;
 }
