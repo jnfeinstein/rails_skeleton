@@ -1,9 +1,6 @@
 class ApplicationController < ActionController::Base
-  include ApplicationHelper
-
   respond_to :xml, :json
   before_filter :check_token
-
   helper_method :current_user
 
   def check_token
