@@ -55,4 +55,5 @@ gem 'newrelic_rpm'
 # Mine
 gem 'annotate', ">=2.5.0", group: :development
 gem 'bcrypt-ruby'
+gem 'debugger'
 

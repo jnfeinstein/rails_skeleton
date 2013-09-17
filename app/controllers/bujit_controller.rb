@@ -1,24 +1,14 @@
 class BujitController < ApplicationController
-  def new
-  end
-
-  def create
-  end
-
-  def edit
-    @bujit = current_user.bujit
+  def index
+    render :json => current_user.bujit.to_json
   end
 
   def update
-    @bujit = current_user.build_bujit(bujit_params)
-    if @bujit.save
-      redirect_to root_url
+    if current_user.update_bujit(bujit_params)
+      render :json => current_user.bujit.to_json
     else
-      render 'edit'
+      render :json => current_user.bujit.errors.full_messages, :status => :unprocessable_entity
     end
-  end
-
-  def destroy
   end
 
   private

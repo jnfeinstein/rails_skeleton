@@ -18,4 +18,3 @@
 //= require backbone.epoxy
 //= require bootstrap
 //= require main
-//= require turbolinks

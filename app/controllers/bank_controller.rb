@@ -1,24 +1,14 @@
 class BankController < ApplicationController
-  def new
-  end
-
-  def create
-  end
-
-  def edit
-    @bank = current_user.bank
+  def index
+    render :json => current_user.bank.to_json
   end
 
   def update
-    @bank = current_user.build_bank(bank_params)
-    if @bank.save
-      redirect_to root_url
+    if current_user.update_bank(bank_params)
+      render :json => current_user.bank.to_json
     else
-      render 'edit'
+      render :json => current_user.bank.errors.full_messages, :status => :unprocessable_entity
     end
-  end
-
-  def destroy
   end
 
   private

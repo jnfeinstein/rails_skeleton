@@ -38,6 +38,13 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.6.3)
+    columnize (0.3.6)
+    debugger (1.6.1)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.2.3)
+    debugger-linecache (1.2.0)
+    debugger-ruby_core_source (1.2.3)
     erubis (2.7.0)
     execjs (2.0.1)
     hike (1.2.3)
@@ -119,6 +126,7 @@ PLATFORMS
 DEPENDENCIES
   annotate (>= 2.5.0)
   bcrypt-ruby
+  debugger
   jbuilder (~> 1.2)
   jquery-rails
   newrelic_rpm

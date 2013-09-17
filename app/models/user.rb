@@ -2,11 +2,12 @@
 #
 # Table name: users
 #
-#  id            :integer          not null, primary key
-#  created_at    :datetime
-#  updated_at    :datetime
-#  email         :string(255)
-#  password_hash :string(255)
+#  id         :integer          not null, primary key
+#  created_at :datetime
+#  updated_at :datetime
+#  email      :string(255)
+#  password   :string(255)
+#  token      :string(255)
 #
 
 require 'bcrypt'
@@ -17,10 +18,11 @@ class User < ActiveRecord::Base
   has_one :bank, dependent: :destroy, autosave: true, inverse_of: :user
   has_one :bujit, dependent: :destroy, autosave: true, inverse_of: :user
   has_many :transactions, dependent: :destroy, inverse_of: :user
-	validates :email, presence: true, uniqueness: true
-  validates :password_hash, presence: true
+	validates :email, presence: true, :uniqueness => {:case_sensitive => false}
+  validates :password, presence: true
   before_create :build_default_associations
-  before_validation :downcase_email
+
+  TOKEN_CHARS = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
 
   def self.authenticate(user_email, user_password)
     user = User.find_by_email(user_email.downcase)
@@ -32,17 +34,26 @@ class User < ActiveRecord::Base
     self.build_bujit
   end
 
-  def downcase_email
-    self.email = self.email.downcase if self.email.present?
-  end
-
 	def password
-	  Password.new(self.password_hash)
+	  Password.new(read_attribute(:password))
 	end
 
 	def password=(new_password)
-	  self.password_hash = Password.create(new_password)
+    unless new_password.blank?
+      write_attribute(:password, Password.create(new_password))
+    end
 	end
+
+  def token
+    Password.new(read_attribute(:token))
+  end
+
+  def make_token
+    t = (0...50).map{ TOKEN_CHARS[rand(TOKEN_CHARS.length)] }.join
+    write_attribute(:token, Password.create(t))
+    self.save
+    t
+  end
 
   def build_new_transaction(params = [], creator = self)
     new_transaction = self.transactions.build(params)
@@ -52,5 +63,15 @@ class User < ActiveRecord::Base
 
   def do_after_transaction_created(transaction)
     self.bank.apply_new_transaction(transaction)
+  end
+
+  def update_bujit(params)
+    self.bujit.amount = params[:amount]
+    self.bujit.save
+  end
+
+  def update_bank(params)
+    self.bank.total = params[:total]
+    self.bank.save
   end
 end

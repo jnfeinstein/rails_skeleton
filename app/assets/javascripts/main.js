@@ -16,17 +16,28 @@ window.budget = (function($){
 
   _budget.init = function() {
     _budget.$content = $(_budget.content);
-    _budget.session = (new _budget.classes.Session()).load();
+    _budget.authorization = new _budget.classes.Authorization();
+    _budget.bank = (new _budget.classes.Bank());
+    _budget.bujit = (new _budget.classes.Bujit());
+    $(_budget.authorization).on('authed', function() {
+      _budget.bank.fetch();
+      _budget.bujit.fetch();
+    });
     _budget.app_router = new _budget.classes.AppRouter();
+
+    _budget.authorization.load();
   };
 
   _budget.set_current_view = function(view, name) {
-    if (_budget.current_view)
+    if (_budget.current_view) {
       _budget.current_view.hide();
+      if (!_budget.current_view.save_as)
+        _budget.current_view.remove();
+    }
     if (view) {
       _budget.current_view = view;
-      if (name)
-        _budget.views[name] = view;
+      if (view.save_as)
+        _budget.views[view.save_as] = view;
     }
     else {
       _budget.current_view = _budget.views[name];
@@ -37,31 +48,73 @@ window.budget = (function($){
       return false;
   };
 
+  _budget.add_error = function(error_message) {
+    if (error_message) {
+      var $div = $('<div/>').addClass('error');
+      var $h5 = $('<h5/>').text(error_message);
+      $div.append($h5).appendTo(_budget.current_view.$el.find('div.footer'));
+    }
+  };
+
+  _budget.clear_errors = function() {
+    _budget.current_view.$el.find('div.footer div.error').remove();
+  };
+
   _budget.classes.AppRouter = Backbone.Router.extend({  
     routes: {
       "": "home",
       "user/:action": "user",
       "bujit/:action": "bujit",
       "bank/:action": "bank",
-      "transaction/:action": "transaction",  
+      "transaction/:action": "transaction",
+      "auth/:action": "auth"
     },
     home: function() {
       if (!_budget.set_current_view(null, 'home'))
-        _budget.set_current_view(new _budget.classes.HomeView().bind_source('session', _budget.session).render(), 'home');
+        _budget.set_current_view(new _budget.classes.HomeView({save_as: 'home'})
+          .bind_source('authorization', _budget.authorization)
+          .bind_source('bank', _budget.bank)
+          .bind_source('bujit', _budget.bujit)      
+          .render());
     },
     user: function(action) {  
-      if (action == 'new') {
-        _budget.set_current_view(new _budget.classes.SignUpView({model: new _budget.classes.User()}).render());
+      switch (action) {
+        case 'new':
+          _budget.set_current_view(new _budget.classes.SignUpView({model: new _budget.classes.User()}).render());
+          break;
       }
     },
     bujit: function(action) {  
-
+      switch (action) {
+        case 'edit':
+          _budget.set_current_view(new _budget.classes.BujitView({model: _budget.bujit}).render());
+          break;
+      }
     },
     bank: function(action) {  
-
+      switch (action) {
+        case 'edit':
+          _budget.set_current_view(new _budget.classes.BankView({model: _budget.bank}).render());
+          break;
+      }
     },
     transaction: function(action) {  
-
+      switch (action) {
+        case 'new':
+          _budget.set_current_view(new _budget.classes.TransactionView({model: new _budget.classes.Transaction()}).render());
+          break;
+      }
+    },
+    auth: function(action) {
+      switch (action) {
+        case 'in':
+          _budget.set_current_view(new _budget.classes.LogInView({model: new _budget.classes.Session()}).render());
+          break;
+        case 'out':
+          _budget.authorization.save(null, null);
+          _budget.app_router.navigate('', true);
+          break;
+      }
     }
   });
 
@@ -94,8 +147,10 @@ window.budget = (function($){
   _budget.classes.HomeView = _budget.classes.TemplateView.extend({
     template: '.home',
     bindings: {
-      'div.authed': 'toggle:session_is_authed',
-      'div.not_authed': 'toggle:not(session_is_authed)'
+      'div.authed': 'toggle:authorization_is_authed',
+      'div.not_authed': 'toggle:not(authorization_is_authed)',
+      'span.bank.total': 'text:bank_total',
+      'span.bujit.amount': 'text:bujit_amount'
     }
   });
 
@@ -108,60 +163,198 @@ window.budget = (function($){
     events: {
       'click button': "submit"
     },
-
+    initialize: function() {
+      _.bindAll(this, 'onSync', 'onError');
+      this.model.on('sync', this.onSync);
+      this.model.on('error', this.onError);
+    },
     submit: function(e) {
       this.model.save();
+    },
+    onSync: function(model, data, options) {
+      _budget.authorization.save(data[0], this.model.get('email'));
+      _budget.app_router.navigate('', true);
+    },
+    onError: function(model, errors, options) {
+      _budget.clear_errors();
+      _.each(errors.responseJSON, _budget.add_error);
     }
   });
 
-  _budget.classes.Session = Backbone.Epoxy.Model.extend({
+  _budget.classes.LogInView = _budget.classes.TemplateView.extend({
+    template: '.session.new',
+    bindings: {
+      'input#email': 'value:email,events:["keyup"]',
+      'input#password': 'value:password,events:["keyup"]'
+    },
+    events: {
+      'click button': "submit"
+    },
+    initialize: function() {
+      _.bindAll(this, 'onSync', 'onError');
+      this.model.on('sync', this.onSync);
+      this.model.on('error', this.onError);
+    },
+    submit: function(e) {
+      this.model.save();
+    },
+    onSync: function(model, data, options) {
+      _budget.authorization.save(data[0], this.model.get('email'));
+      _budget.app_router.navigate('', true);
+    },
+    onError: function(model, errors, options) {
+      _budget.clear_errors();
+      _.each(errors.responseJSON, _budget.add_error);
+    }
+  });
+
+  _budget.classes.TransactionView = _budget.classes.TemplateView.extend({
+    template: '.transaction.new',
+    bindings: {
+      'input#amount': 'value:amount,events:["keyup"]'
+    },
+    events: {
+      'click button': "submit"
+    },
+    initialize: function() {
+      _.bindAll(this, 'onSync', 'onError');
+      this.model.on('sync', this.onSync);
+      this.model.on('error', this.onError);
+    },
+    submit: function(e) {
+      this.model.save();
+    },
+    onSync: function(model, data, options) {
+      _budget.app_router.navigate('', true);
+    },
+    onError: function(model, errors, options) {
+      _budget.clear_errors();
+      _.each(errors.responseJSON, _budget.add_error);
+    }
+  });
+
+  _budget.classes.BujitView = _budget.classes.TemplateView.extend({
+    template: '.bujit.edit',
+    bindings: {
+      'input#amount': 'value:amount,events:["keyup"]'
+    },
+    events: {
+      'click button': "submit"
+    },
+    initialize: function() {
+      _.bindAll(this, 'onSync', 'onError');
+      this.model.on('sync', this.onSync);
+      this.model.on('error', this.onError);
+    },
+    submit: function(e) {
+      this.model.save();
+    },
+    onSync: function(model, data, options) {
+      _budget.app_router.navigate('', true);
+    },
+    onError: function(model, errors, options) {
+      _budget.clear_errors();
+      _.each(errors.responseJSON, _budget.add_error);
+    }
+  });
+
+  _budget.classes.BankView = _budget.classes.TemplateView.extend({
+    template: '.bank.edit',
+    bindings: {
+      'input#total': 'value:total,events:["keyup"]'
+    },
+    events: {
+      'click button': "submit"
+    },
+    initialize: function() {
+      _.bindAll(this, 'onSync', 'onError');
+      this.model.on('sync', this.onSync);
+      this.model.on('error', this.onError);
+    },
+    submit: function(e) {
+      this.model.save();
+    },
+    onSync: function(model, data, options) {
+      _budget.app_router.navigate('', true);
+    },
+    onError: function(model, errors, options) {
+      _budget.clear_errors();
+      _.each(errors.responseJSON, _budget.add_error);
+    }
+  });
+
+  _budget.classes.Authorization = Backbone.Epoxy.Model.extend({
     defaults: {
-      cookie: 'budget_auth_token',
-      auth_token: null
+      token_cookie: 'token',
+      user_cookie: 'user',
+      token: null,
+      user: null
     },
     computeds: {
       is_authed: function() {
-        return this.get('auth_token') != null;
+        var token = this.get('token');
+        var user = this.get('user');
+        return token && user;
       }
     },
     load: function() {
-      this.set('auth_token', $.cookie(this.get('cookie')));
+      var was_authed = this.get('is_authed');
+      this.set('token', $.cookie(this.get('token_cookie')));
+      this.set('user', $.cookie(this.get('user_cookie')));
+      this.trigger_auth_events(was_authed, this.get('is_authed'));
       return this;
     },
-    save: function(auth_token) {
-      this.set('auth_token', auth_token);
-      $.cookie(this.get('cookie'), this.get('auth_token'));
+    save: function(token, user) {
+      var was_authed = this.get('is_authed');
+      this.set('token', token);
+      this.set('user', user)
+      $.cookie(this.get('token_cookie'), this.get('token'), { expires: 7, path: '/' });
+      $.cookie(this.get('user_cookie'), this.get('user'), { expires: 7, path: '/' });
+      this.trigger_auth_events(was_authed, this.get('is_authed'));
       return this;
     },
-    auth: function(username, password) {
-      var _this = this;
-      var deferred = $.Deferred();
-      $.post(budget_urls.auth, {username: username, password: password}, function(auth_token) {
-        if (result) {
-          _this.save(auth_token);
-          deferred.resolve();
-        }
-        else
-          deferred.reject();
-      });
-      return deferred.promise();
-    },
-    de_auth: function() {
-      this.save(null);
+    trigger_auth_events: function(old_auth_state, new_auth_state) {
+      if (!old_auth_state && new_auth_state)
+        $(this).trigger('authed');
+      else if (old_auth_state && !new_auth_state)
+        $(this).trigger('deauthed');
     }
   });
 
   _budget.classes.User = Backbone.Epoxy.Model.extend({
     url: 'user',
     defaults: {
-      email: '',
-      password: ''
+      email: null,
+      password: null
+    }
+  });
+
+  _budget.classes.Session = Backbone.Epoxy.Model.extend({
+    url: 'session',
+    defaults: {
+      email: null,
+      password: null
     }
   });
 
   _budget.classes.Transaction = Backbone.Epoxy.Model.extend({
+    url: 'transaction',
     defaults: {
       amount: 0
+    }
+  });
+
+  _budget.classes.Bujit = Backbone.Epoxy.Model.extend({
+    urlRoot: 'bujit',
+    defaults: {
+      amount: 0
+    }
+  });
+
+  _budget.classes.Bank = Backbone.Epoxy.Model.extend({
+    urlRoot: 'bank',
+    defaults: {
+      total: 0
     }
   });
 

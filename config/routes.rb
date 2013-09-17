@@ -1,6 +1,6 @@
 Budget::Application.routes.draw do
   get "auth" => "session#new", :as => "auth"
-  get "sign_up" => "user#new", :as => "sign_up"
+  get "sign_up" => "user#create", :as => "sign_up"
 
   resources :user
   resources :session

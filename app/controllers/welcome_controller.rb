@@ -1,4 +1,3 @@
 class WelcomeController < ApplicationController
-  def index
-  end
+  skip_before_filter :check_token
 end
