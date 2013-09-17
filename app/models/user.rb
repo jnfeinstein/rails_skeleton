@@ -29,6 +29,10 @@ class User < ActiveRecord::Base
     user if user && user.password == user_password
   end
 
+  def self.find_by_email(email)
+    User.find(:first, :conditions => ["email=?", email.downcase]) 
+  end
+
   def build_default_associations
     self.build_bank
     self.build_bujit
