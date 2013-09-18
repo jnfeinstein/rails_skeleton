@@ -17,4 +17,5 @@
 //= require backbone.sync.deferred
 //= require backbone.epoxy
 //= require bootstrap
+//= require sha3
 //= require main
