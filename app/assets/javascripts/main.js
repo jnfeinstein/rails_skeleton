@@ -17,14 +17,29 @@ window.budget = (function($){
 
   _budget.init = function() {
     _budget.$content = $(_budget.content);
+    _budget.bind_enter_key();
     _budget.authorization = new _budget.classes.Authorization();
     _budget.app_router = new _budget.classes.AppRouter();
+    _budget.bind_focus_on_navigate();
     _budget.user = new _budget.classes.User();
     if (_budget.authorization.load().get('is_authed'))
       _budget.load_until_user_fetched();
     else
       _budget.set_loading(false);
     Backbone.history.start();
+  };
+
+  _budget.bind_enter_key = function() {
+    _budget.$content.bind('keypress', function(e){
+      if (e.keyCode == 13)
+        _budget.$content.find('button.submit').click();
+     });
+  };
+
+  _budget.bind_focus_on_navigate = function() {
+    _budget.app_router.bind('all', function() {
+      _budget.$content.find('input:first').focus();
+    });
   };
 
   _budget.set_current_view = function(view, name) {
@@ -64,9 +79,24 @@ window.budget = (function($){
 
   _budget.load_until_user_fetched = function() {
     _budget.set_loading(true);
-    $.when(_budget.user.fetch.promise).done(function() {
+    $.when(_budget.user.fetch.promise)
+      .done(function() {
+        _budget.set_loading(false);
+      })
+      .fail(function(errors) {
+        if (errors['error'] == 'Forbidden')
+          _budget.error_is_403(403);
+      });  
+  };
+
+  _budget.error_is_403 = function(error) {
+    if (error == 403) {
+      _budget.app_router.navigate('auth/in', true);
+      _budget.add_error("you were logged out");
       _budget.set_loading(false);
-    });   
+      return true;
+    }
+    return false;
   };
 
   _budget.add_error = function(error_message) {
@@ -258,9 +288,11 @@ window.budget = (function($){
       _budget.load_until_user_fetched();
     },
     onError: function(model, errors, options) {
-      _budget.clear_errors();
-      _.each(errors.responseJSON, _budget.add_error);
-      _budget.set_loading(false);
+      if (!_budget.error_is_403(errors.status)) {
+        _budget.clear_errors();
+        _.each(errors.responseJSON, _budget.add_error);
+        _budget.set_loading(false);
+      }
     }
   });
 
@@ -286,9 +318,11 @@ window.budget = (function($){
       _budget.set_loading(false);
     },
     onError: function(model, errors, options) {
-      _budget.clear_errors();
-      _.each(errors.responseJSON, _budget.add_error);
-      _budget.set_loading(false);
+      if (!_budget.error_is_403(errors.status)) {
+        _budget.clear_errors();
+        _.each(errors.responseJSON, _budget.add_error);
+        _budget.set_loading(false);
+      }
     }
   });
 
@@ -314,9 +348,11 @@ window.budget = (function($){
       _budget.set_loading(false);
     },
     onError: function(model, errors, options) {
-      _budget.clear_errors();
-      _.each(errors.responseJSON, _budget.add_error);
-      _budget.set_loading(false);
+      if (!_budget.error_is_403(errors.status)) {
+        _budget.clear_errors();
+        _.each(errors.responseJSON, _budget.add_error);
+        _budget.set_loading(false);
+      }
     }
   });
 
@@ -403,11 +439,11 @@ window.budget = (function($){
       this.bank = new _budget.classes.Bank();  
     },
     fetch: function() {
-      this.fetch.promise = $.when(this.bujit.fetch(), this.bank.fetch()).promise();
+      this.fetch.promise = $.when(this.bujit.fetch()(), this.bank.fetch()()).promise();
       return this.fetch.promise;
     },
     save: function() {
-      this.save.promise = $.when(this.bujit.save(), this.bank.save()).promise();
+      this.save.promise = $.when(this.bujit.save()(), this.bank.save()()).promise();
       return this.save.promise;
     }
   });
