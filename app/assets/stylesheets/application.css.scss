@@ -31,7 +31,8 @@ div * {
 }
 div.content.main {
   max-width: 234px;
-  margin: 5px 8px 5px 8px;
+  padding: 5px 8px 5px 8px;
+  margin: auto;
 }
 div.loading {
   height: 32px;
