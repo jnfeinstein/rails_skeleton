@@ -187,8 +187,7 @@ window.budget = (function($){
     auth: function(action) {
       switch (action) {
         case 'in':
-          if (!_budget.check_is_authorized())
-            _budget.set_current_view(new _budget.classes.LogInView({model: new _budget.classes.Credentials()}).render());
+          _budget.set_current_view(new _budget.classes.LogInView({model: new _budget.classes.Credentials()}).render());
           break;
         case 'out':
           _budget.authorization.save(null, null);
