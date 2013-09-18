@@ -22,8 +22,6 @@ class User < ActiveRecord::Base
   validates :password, presence: true
   before_create :build_default_associations
 
-  TOKEN_CHARS = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
-
   def self.authenticate(user_email, user_password)
     user = User.find_by_email(user_email.downcase)
     user if user && user.password == user_password
@@ -53,7 +51,7 @@ class User < ActiveRecord::Base
   end
 
   def make_token
-    t = (0...50).map{ TOKEN_CHARS[rand(TOKEN_CHARS.length)] }.join
+    t = SecureRandom.urlsafe_base64
     write_attribute(:token, Password.create(t))
     self.save
     t

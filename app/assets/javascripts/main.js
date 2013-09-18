@@ -137,15 +137,13 @@ window.budget = (function($){
           .render());
     },
     user: function(action) {  
-      if (_budget.check_is_authorized()) {
-        switch (action) {
-          case 'new':
-            _budget.set_current_view(new _budget.classes.SignUpView({model: new _budget.classes.Credentials()}).render());
-            break;
-          default:
-            _budget.app_router.navigate('', true);
-            break;
-        }
+      switch (action) {
+        case 'new':
+          _budget.set_current_view(new _budget.classes.SignUpView({model: new _budget.classes.Credentials()}).render());
+          break;
+        default:
+          _budget.app_router.navigate('', true);
+          break;
       }
     },
     bujit: function(action) {
@@ -429,6 +427,14 @@ window.budget = (function($){
     defaults: {
       email: null,
       password: null
+    },
+
+    initialize: function() {
+      this.oldsave = this.save;
+      this.save = function() {
+        this.set({password: CryptoJS.SHA3(this.get('password')).toString(CryptoJS.enc.Hex)}, {silent: true});
+        this.oldsave.apply(this, arguments);
+      }
     }
   });
 
