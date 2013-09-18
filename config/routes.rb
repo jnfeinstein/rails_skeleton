@@ -19,10 +19,9 @@ Budget::Application.routes.draw do
       cache ActionController::Base.helpers.asset_path("application.css")
       cache ActionController::Base.helpers.asset_path("application.js")
       cache ActionController::Base.helpers.asset_path("loader.gif")  
-      # cache other assets
+
       network "/"
-      network "http://ajax.cloudflare.com/cdn-cgi/nexp/abv=1415253878/cloudflare.min.js"
-      network "http://js-agent.newrelic.com/nr-100.js"
+      network "http://"
     end
     get "/application.manifest" => offline  
   end
