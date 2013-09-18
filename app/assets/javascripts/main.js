@@ -85,18 +85,26 @@ window.budget = (function($){
       })
       .fail(function(errors) {
         if (errors['error'] == 'Forbidden')
-          _budget.error_is_403(403);
+          _budget.check_error_is_not_403(403);
       });  
   };
 
-  _budget.error_is_403 = function(error) {
+  _budget.check_error_is_not_403 = function(error) {
     if (error == 403) {
-      _budget.app_router.navigate('auth/in', true);
+      _budget.app_router.navigate('auth/out', true);
       _budget.add_error("you were logged out");
       _budget.set_loading(false);
-      return true;
+      return false;
     }
-    return false;
+    return true;
+  };
+
+  _budget.check_is_authorized = function() {
+    if (!_budget.authorization.get('is_authed')) {
+      _budget.app_router.navigate('auth/out', true);
+      return false;
+    }
+    return true;
   };
 
   _budget.add_error = function(error_message) {
@@ -129,40 +137,64 @@ window.budget = (function($){
           .render());
     },
     user: function(action) {  
-      switch (action) {
-        case 'new':
-          _budget.set_current_view(new _budget.classes.SignUpView({model: new _budget.classes.Credentials()}).render());
-          break;
+      if (_budget.check_is_authorized()) {
+        switch (action) {
+          case 'new':
+            _budget.set_current_view(new _budget.classes.SignUpView({model: new _budget.classes.Credentials()}).render());
+            break;
+          default:
+            _budget.app_router.navigate('', true);
+            break;
+        }
       }
     },
-    bujit: function(action) {  
-      switch (action) {
-        case 'edit':
-          _budget.set_current_view(new _budget.classes.BujitView({model: _budget.user.bujit}).render());
-          break;
+    bujit: function(action) {
+      if (_budget.check_is_authorized()) {
+        switch (action) {
+          case 'edit':
+            _budget.set_current_view(new _budget.classes.BujitView({model: _budget.user.bujit}).render());
+            break;
+          default:
+            _budget.app_router.navigate('', true);
+            break;
+        }
       }
     },
-    bank: function(action) {  
-      switch (action) {
-        case 'edit':
-          _budget.set_current_view(new _budget.classes.BankView({model: _budget.user.bank}).render());
-          break;
+    bank: function(action) {
+      if (_budget.check_is_authorized()) {
+        switch (action) {
+          case 'edit':
+            _budget.set_current_view(new _budget.classes.BankView({model: _budget.user.bank}).render());
+            break;
+          default:
+            _budget.app_router.navigate('', true);
+            break;
+        }
       }
     },
-    transaction: function(action) {  
-      switch (action) {
-        case 'new':
-          _budget.set_current_view(new _budget.classes.TransactionView({model: new _budget.classes.Transaction()}).render());
-          break;
+    transaction: function(action) {
+      if (_budget.check_is_authorized()) {
+        switch (action) {
+          case 'new':
+            _budget.set_current_view(new _budget.classes.TransactionView({model: new _budget.classes.Transaction()}).render());
+            break;
+          default:
+            _budget.app_router.navigate('', true);
+            break;
+        }
       }
     },
     auth: function(action) {
       switch (action) {
         case 'in':
-          _budget.set_current_view(new _budget.classes.LogInView({model: new _budget.classes.Credentials()}).render());
+          if (!_budget.check_is_authorized())
+            _budget.set_current_view(new _budget.classes.LogInView({model: new _budget.classes.Credentials()}).render());
           break;
         case 'out':
           _budget.authorization.save(null, null);
+          _budget.app_router.navigate('', true);
+          break;
+        default:
           _budget.app_router.navigate('', true);
           break;
       }
@@ -288,7 +320,7 @@ window.budget = (function($){
       _budget.load_until_user_fetched();
     },
     onError: function(model, errors, options) {
-      if (!_budget.error_is_403(errors.status)) {
+      if (_budget.check_error_is_not_403(errors.status)) {
         _budget.clear_errors();
         _.each(errors.responseJSON, _budget.add_error);
         _budget.set_loading(false);
@@ -318,7 +350,7 @@ window.budget = (function($){
       _budget.set_loading(false);
     },
     onError: function(model, errors, options) {
-      if (!_budget.error_is_403(errors.status)) {
+      if (_budget.check_error_is_not_403(errors.status)) {
         _budget.clear_errors();
         _.each(errors.responseJSON, _budget.add_error);
         _budget.set_loading(false);
@@ -348,7 +380,7 @@ window.budget = (function($){
       _budget.set_loading(false);
     },
     onError: function(model, errors, options) {
-      if (!_budget.error_is_403(errors.status)) {
+      if (_budget.check_error_is_not_403(errors.status)) {
         _budget.clear_errors();
         _.each(errors.responseJSON, _budget.add_error);
         _budget.set_loading(false);
