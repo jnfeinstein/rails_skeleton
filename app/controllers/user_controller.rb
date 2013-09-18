@@ -10,6 +10,14 @@ class UserController < ApplicationController
     end
   end
 
+  def index
+    render :json => {:bank => current_user.bank, :bujit => current_user.bujit}
+  end
+
+  def show
+    index
+  end
+
   private
 
   def user_params

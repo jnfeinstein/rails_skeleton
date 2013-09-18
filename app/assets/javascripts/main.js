@@ -475,12 +475,19 @@ window.budget = (function($){
       this.bank = new _budget.classes.Bank();  
     },
     fetch: function() {
-      this.fetch.promise = $.when(this.bujit.fetch(), this.bank.fetch()).promise();
+      var _user = this;
+      var deferred = $.Deferred();
+      $.get('user')
+        .done(function(data) {
+          _user.bujit.set(data.bujit);
+          _user.bank.set(data.bank);
+          deferred.resolve();
+        })
+        .fail(function(errors) {
+          deferred.reject(errors);
+        });
+      this.fetch.promise = deferred.promise();
       return this.fetch.promise;
-    },
-    save: function() {
-      this.save.promise = $.when(this.bujit.save(), this.bank.save()).promise();
-      return this.save.promise;
     }
   });
 
