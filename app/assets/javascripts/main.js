@@ -484,5 +484,10 @@ window.budget = (function($){
 })(jQuery);
 
 $(document).ready(function() {
+  $(window.applicationCache).on('updateready', function() {
+    window.applicationCache.swapCache();
+    if (confirm('A new version of bujit.me is available! Load it?'))
+      window.location.reload();
+  });
   budget.init();
 });
