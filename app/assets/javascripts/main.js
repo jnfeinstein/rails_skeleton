@@ -84,8 +84,7 @@ window.budget = (function($){
         _budget.set_loading(false);
       })
       .fail(function(errors) {
-        if (errors['error'] == 'Forbidden')
-          _budget.check_error_is_not_403(403);
+        _budget.check_error_is_not_403(errors.status);
       });  
   };
 
@@ -476,11 +475,11 @@ window.budget = (function($){
       this.bank = new _budget.classes.Bank();  
     },
     fetch: function() {
-      this.fetch.promise = $.when(this.bujit.fetch()(), this.bank.fetch()()).promise();
+      this.fetch.promise = $.when(this.bujit.fetch(), this.bank.fetch()).promise();
       return this.fetch.promise;
     },
     save: function() {
-      this.save.promise = $.when(this.bujit.save()(), this.bank.save()()).promise();
+      this.save.promise = $.when(this.bujit.save(), this.bank.save()).promise();
       return this.save.promise;
     }
   });

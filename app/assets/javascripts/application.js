@@ -14,7 +14,6 @@
 //= require jquery.cookie
 //= require underscore
 //= require backbone
-//= require backbone.sync.deferred
 //= require backbone.epoxy
 //= require bootstrap
 //= require sha3
