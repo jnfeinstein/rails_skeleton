@@ -20,8 +20,7 @@ Budget::Application.routes.draw do
       cache ActionController::Base.helpers.asset_path("application.js")
       cache ActionController::Base.helpers.asset_path("loader.gif")  
 
-      network "/"
-      network "http://"
+      network "*"
     end
     get "/application.manifest" => offline  
   end
