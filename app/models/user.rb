@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    User.find(:first, :conditions => ["email=?", email.downcase]) 
+    User.where(:email => email.downcase).first 
   end
 
   def build_default_associations
