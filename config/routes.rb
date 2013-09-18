@@ -12,7 +12,7 @@ Budget::Application.routes.draw do
   root 'welcome#index'
 
   if Rails.env.production?
-    offline = Rack::Offline.configure :cache_interval => 120 do
+    offline = Rack::Offline.configure do
       cache ActionController::Base.helpers.asset_path("404.html")
       cache ActionController::Base.helpers.asset_path("422.html")
       cache ActionController::Base.helpers.asset_path("500.html")    
