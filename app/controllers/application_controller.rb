@@ -3,17 +3,17 @@ class ApplicationController < ActionController::Base
   before_filter :check_token
   helper_method :current_user
 
+  private
+
   def check_token
-    user = User.find_by_email(cookies[:user])
-    if !user || user.token != cookies[:token]
+    if !current_user || current_user.token != cookies[:token]
       render :nothing => true, :status => :forbidden
       return false
     end
   end
 
-  private
-
+  @_current_user = nil
   def current_user
-    User.find_by_email(cookies[:user])
+    @_current_user ||= User.find_by_email(cookies[:user])
   end
 end
