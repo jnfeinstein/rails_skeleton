@@ -11,7 +11,7 @@ class UserController < ApplicationController
   end
 
   def index
-    render :json => {:bank => current_user.bank, :bujit => current_user.bujit}
+    render :json => {}
   end
 
   def show

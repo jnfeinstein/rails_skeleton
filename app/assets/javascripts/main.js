@@ -1,209 +1,168 @@
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
 };
-window.budget = (function($){
-  var _budget = this;
-  _budget.content = 'div.content.main';
-  _budget.classes = {};
-  _budget.views = {};
-  _budget.current_view = null;
-  _budget.is_loading = true;
+window.skeleton = (function($){
+  var _skeleton = this;
+  _skeleton.content = 'div.content.main';
+  _skeleton.classes = {};
+  _skeleton.views = {};
+  _skeleton.current_view = null;
+  _skeleton.is_loading = true;
 
-  _budget.debug = true;
-  _budget.log = function(stuff) {
-    if (_budget.debug)
+  _skeleton.debug = true;
+  _skeleton.log = function(stuff) {
+    if (_skeleton.debug)
       console.log(stuff);
   };
 
-  _budget.init = function() {
-    _budget.$content = $(_budget.content);
-    _budget.bind_enter_key();
-    _budget.authorization = new _budget.classes.Authorization();
-    _budget.app_router = new _budget.classes.AppRouter();
-    _budget.bind_focus_on_navigate();
-    _budget.user = new _budget.classes.User();
-    if (_budget.authorization.load().get('is_authed'))
-      _budget.load_until_user_fetched();
+  _skeleton.init = function() {
+    _skeleton.$content = $(_skeleton.content);
+    _skeleton.bind_enter_key();
+    _skeleton.authorization = new _skeleton.classes.Authorization();
+    _skeleton.app_router = new _skeleton.classes.AppRouter();
+    _skeleton.bind_focus_on_navigate();
+    _skeleton.user = new _skeleton.classes.User();
+    if (_skeleton.authorization.load().get('is_authed'))
+      _skeleton.load_until_user_fetched();
     else
-      _budget.set_loading(false);
+      _skeleton.set_loading(false);
     Backbone.history.start();
   };
 
-  _budget.bind_enter_key = function() {
-    _budget.$content.bind('keypress', function(e){
+  _skeleton.bind_enter_key = function() {
+    _skeleton.$content.bind('keypress', function(e){
       if (e.keyCode == 13)
-        _budget.$content.find('button.submit').click();
+        _skeleton.$content.find('button.submit').click();
      });
   };
 
-  _budget.bind_focus_on_navigate = function() {
-    _budget.app_router.bind('all', function() {
-      _budget.$content.find('input:first').focus();
+  _skeleton.bind_focus_on_navigate = function() {
+    _skeleton.app_router.bind('all', function() {
+      _skeleton.$content.find('input:first').focus();
     });
   };
 
-  _budget.set_current_view = function(view, name) {
-    if (_budget.current_view) {
-      _budget.current_view.hide();
-      if (!_budget.current_view.save_as)
-        _budget.current_view.remove();
+  _skeleton.set_current_view = function(view, name) {
+    if (_skeleton.current_view) {
+      _skeleton.current_view.hide();
+      if (!_skeleton.current_view.save_as)
+        _skeleton.current_view.remove();
     }
     if (view) {
-      _budget.current_view = view;
+      _skeleton.current_view = view;
       if (view.save_as)
-        _budget.views[view.save_as] = view;
+        _skeleton.views[view.save_as] = view;
     }
     else {
-      _budget.current_view = _budget.views[name];
+      _skeleton.current_view = _skeleton.views[name];
     }
-    if (!_budget.current_view)
+    if (!_skeleton.current_view)
       return false;
-    if (!_budget.is_loading)
-      _budget.current_view.show();
-    return _budget.current_view;
+    if (!_skeleton.is_loading)
+      _skeleton.current_view.show();
+    return _skeleton.current_view;
   };
 
-  _budget.set_loading = function(is_loading) {
+  _skeleton.set_loading = function(is_loading) {
     if (is_loading) {
-      if (_budget.current_view)
-        _budget.current_view.hide();
+      if (_skeleton.current_view)
+        _skeleton.current_view.hide();
       $('div.loading').show();
     }
     else {
       $('div.loading').hide();
-      if (_budget.current_view)
-        _budget.current_view.show();
+      if (_skeleton.current_view)
+        _skeleton.current_view.show();
     }
-    _budget.is_loading = is_loading;
+    _skeleton.is_loading = is_loading;
   };
 
-  _budget.load_until_user_fetched = function() {
-    _budget.set_loading(true);
-    $.when(_budget.user.fetch.promise)
+  _skeleton.load_until_user_fetched = function() {
+    _skeleton.set_loading(true);
+    $.when(_skeleton.user.fetch.promise)
       .done(function() {
-        _budget.set_loading(false);
+        _skeleton.set_loading(false);
       })
       .fail(function(errors) {
-        _budget.check_error_is_not_403(errors.status);
+        _skeleton.check_error_is_not_403(errors.status);
       });  
   };
 
-  _budget.check_error_is_not_403 = function(error) {
+  _skeleton.check_error_is_not_403 = function(error) {
     if (error == 403) {
-      _budget.app_router.navigate('auth/out', true);
-      _budget.add_error("you were logged out");
-      _budget.set_loading(false);
+      _skeleton.app_router.navigate('auth/out', true);
+      _skeleton.add_error("you were logged out");
+      _skeleton.set_loading(false);
       return false;
     }
     return true;
   };
 
-  _budget.check_is_authorized = function() {
-    if (!_budget.authorization.get('is_authed')) {
-      _budget.app_router.navigate('auth/out', true);
+  _skeleton.check_is_authorized = function() {
+    if (!_skeleton.authorization.get('is_authed')) {
+      _skeleton.app_router.navigate('auth/out', true);
       return false;
     }
     return true;
   };
 
-  _budget.add_error = function(error_message) {
+  _skeleton.add_error = function(error_message) {
     if (error_message) {
       var $div = $('<div/>').addClass('error');
       var $h5 = $('<h5/>').text(error_message);
-      $div.append($h5).appendTo(_budget.current_view.$el.find('div.footer'));
+      $div.append($h5).appendTo(_skeleton.current_view.$el.find('div.footer'));
     }
   };
 
-  _budget.clear_errors = function() {
-    _budget.current_view.$el.find('div.footer div.error').remove();
+  _skeleton.clear_errors = function() {
+    _skeleton.current_view.$el.find('div.footer div.error').remove();
   };
 
-  _budget.classes.AppRouter = Backbone.Router.extend({  
+  _skeleton.classes.AppRouter = Backbone.Router.extend({  
     routes: {
       "": "home",
       "user/:action": "user",
-      "bujit/:action": "bujit",
-      "bank/:action": "bank",
-      "transaction/:action": "transaction",
       "auth/:action": "auth"
     },
     home: function() {
-      if (!_budget.set_current_view(null, 'home'))
-        _budget.set_current_view(new _budget.classes.HomeView({save_as: 'home'})
-          .bind_source('authorization', _budget.authorization)
-          .bind_source('bank', _budget.user.bank)
-          .bind_source('bujit', _budget.user.bujit)      
+      if (!_skeleton.set_current_view(null, 'home'))
+        _skeleton.set_current_view(new _skeleton.classes.HomeView({save_as: 'home'})
+          .bind_source('authorization', _skeleton.authorization)   
           .render());
     },
     user: function(action) {  
       switch (action) {
         case 'new':
-          _budget.set_current_view(new _budget.classes.SignUpView({model: new _budget.classes.Credentials()}).render());
+          _skeleton.set_current_view(new _skeleton.classes.SignUpView({model: new _skeleton.classes.Credentials()}).render());
           break;
         default:
-          _budget.app_router.navigate('', true);
+          _skeleton.app_router.navigate('', true);
           break;
-      }
-    },
-    bujit: function(action) {
-      if (_budget.check_is_authorized()) {
-        switch (action) {
-          case 'edit':
-            _budget.set_current_view(new _budget.classes.BujitView({model: _budget.user.bujit}).render());
-            break;
-          default:
-            _budget.app_router.navigate('', true);
-            break;
-        }
-      }
-    },
-    bank: function(action) {
-      if (_budget.check_is_authorized()) {
-        switch (action) {
-          case 'edit':
-            _budget.set_current_view(new _budget.classes.BankView({model: _budget.user.bank}).render());
-            break;
-          default:
-            _budget.app_router.navigate('', true);
-            break;
-        }
-      }
-    },
-    transaction: function(action) {
-      if (_budget.check_is_authorized()) {
-        switch (action) {
-          case 'new':
-            _budget.set_current_view(new _budget.classes.TransactionView({model: new _budget.classes.Transaction()}).render());
-            break;
-          default:
-            _budget.app_router.navigate('', true);
-            break;
-        }
       }
     },
     auth: function(action) {
       switch (action) {
         case 'in':
-          _budget.set_current_view(new _budget.classes.LogInView({model: new _budget.classes.Credentials()}).render());
+          _skeleton.set_current_view(new _skeleton.classes.LogInView({model: new _skeleton.classes.Credentials()}).render());
           break;
         case 'out':
-          _budget.authorization.save(null, null);
-          _budget.app_router.navigate('', true);
+          _skeleton.authorization.save(null, null);
+          _skeleton.app_router.navigate('', true);
           break;
         default:
-          _budget.app_router.navigate('', true);
+          _skeleton.app_router.navigate('', true);
           break;
       }
     }
   });
 
-  _budget.classes.TemplateView = Backbone.Epoxy.View.extend({
+  _skeleton.classes.TemplateView = Backbone.Epoxy.View.extend({
     // remember, needs template, and a collection or a model
     render: function() {
       if (!this._template)
         this._template = _.template($('.template' + this.template).html());
       this.$el.append(this._template(this.collection || this.model));
-      this.$el.appendTo(_budget.content).hide();
+      this.$el.appendTo(_skeleton.content).hide();
       this.applyBindings();
       return this;
     },
@@ -223,17 +182,15 @@ window.budget = (function($){
     }
   });
 
-  _budget.classes.HomeView = _budget.classes.TemplateView.extend({
+  _skeleton.classes.HomeView = _skeleton.classes.TemplateView.extend({
     template: '.home',
     bindings: {
       'div.authed': 'toggle:authorization_is_authed',
-      'div.not_authed': 'toggle:not(authorization_is_authed)',
-      'span.bank.total': 'text:bank_total',
-      'span.bujit.amount': 'text:bujit_amount'
+      'div.not_authed': 'toggle:not(authorization_is_authed)'
     }
   });
 
-  _budget.classes.SignUpView = _budget.classes.TemplateView.extend({
+  _skeleton.classes.SignUpView = _skeleton.classes.TemplateView.extend({
     template: '.user.new',
     bindings: {
       'input#email': 'value:email,events:["keyup"]',
@@ -248,22 +205,22 @@ window.budget = (function($){
       this.model.on('error', this.onError);
     },
     submit: function(e) {
-      _budget.set_loading(true);
+      _skeleton.set_loading(true);
       this.model.save(null, {url: 'user'});
     },
     onSync: function(model, data, options) {
-      _budget.authorization.save(data[0], this.model.get('email'));
-      _budget.app_router.navigate('', true);
-      _budget.load_until_user_fetched();
+      _skeleton.authorization.save(data[0], this.model.get('email'));
+      _skeleton.app_router.navigate('', true);
+      _skeleton.load_until_user_fetched();
     },
     onError: function(model, errors, options) {
-      _budget.clear_errors();
-      _.each(errors.responseJSON, _budget.add_error);
-      _budget.set_loading(false);
+      _skeleton.clear_errors();
+      _.each(errors.responseJSON, _skeleton.add_error);
+      _skeleton.set_loading(false);
     }
   });
 
-  _budget.classes.LogInView = _budget.classes.TemplateView.extend({
+  _skeleton.classes.LogInView = _skeleton.classes.TemplateView.extend({
     template: '.session.new',
     bindings: {
       'input#email': 'value:email,events:["keyup"]',
@@ -278,113 +235,22 @@ window.budget = (function($){
       this.model.on('error', this.onError);
     },
     submit: function(e) {
-      _budget.set_loading(true);
+      _skeleton.set_loading(true);
       this.model.save(null, {url: 'session'});
     },
     onSync: function(model, data, options) {
-      _budget.authorization.save(data[0], this.model.get('email'));
-      _budget.app_router.navigate('', true);
-      _budget.load_until_user_fetched();
+      _skeleton.authorization.save(data[0], this.model.get('email'));
+      _skeleton.app_router.navigate('', true);
+      _skeleton.load_until_user_fetched();
     },
     onError: function(model, errors, options) {
-      _budget.clear_errors();
-      _.each(errors.responseJSON, _budget.add_error);
-      _budget.set_loading(false);
+      _skeleton.clear_errors();
+      _.each(errors.responseJSON, _skeleton.add_error);
+      _skeleton.set_loading(false);
     }
   });
 
-  _budget.classes.TransactionView = _budget.classes.TemplateView.extend({
-    template: '.transaction.new',
-    bindings: {
-      'input#amount': 'value:amount,events:["keyup"]'
-    },
-    events: {
-      'click button': "submit"
-    },
-    initialize: function() {
-      _.bindAll(this, 'onSync', 'onError');
-      this.model.on('sync', this.onSync);
-      this.model.on('error', this.onError);
-    },
-    submit: function(e) {
-      _budget.set_loading(true);
-      this.model.save();
-    },
-    onSync: function(model, data, options) {
-      _budget.app_router.navigate('', true);
-      _budget.user.fetch();
-      _budget.load_until_user_fetched();
-    },
-    onError: function(model, errors, options) {
-      if (_budget.check_error_is_not_403(errors.status)) {
-        _budget.clear_errors();
-        _.each(errors.responseJSON, _budget.add_error);
-        _budget.set_loading(false);
-      }
-    }
-  });
-
-  _budget.classes.BujitView = _budget.classes.TemplateView.extend({
-    template: '.bujit.edit',
-    bindings: {
-      'input#amount': 'value:amount,events:["keyup"]'
-    },
-    events: {
-      'click button': "submit"
-    },
-    initialize: function() {
-      _.bindAll(this, 'onSync', 'onError');
-      this.model.on('sync', this.onSync);
-      this.model.on('error', this.onError);
-    },
-    submit: function(e) {
-      _budget.set_loading(true);
-      this.model.save();
-    },
-    onSync: function(model, data, options) {
-      _budget.app_router.navigate('', true);
-      _budget.set_loading(false);
-    },
-    onError: function(model, errors, options) {
-      if (_budget.check_error_is_not_403(errors.status)) {
-        _budget.clear_errors();
-        _.each(errors.responseJSON, _budget.add_error);
-        _budget.set_loading(false);
-      }
-    }
-  });
-
-  _budget.classes.BankView = _budget.classes.TemplateView.extend({
-    template: '.bank.edit',
-    bindings: {
-      'input#total': 'value:total,events:["keyup"]'
-    },
-    events: {
-      'click button': "submit"
-    },
-    initialize: function() {
-      _.bindAll(this, 'onSync', 'onError');
-      this.model.on('sync', this.onSync);
-      this.model.on('error', this.onError);
-    },
-    submit: function(e) {
-      _budget.set_loading(true);
-      this.model.save();
-    },
-    onSync: function(model, data, options) {
-      _budget.app_router.navigate('', true);
-      _budget.set_loading(false);
-    },
-    onError: function(model, errors, options) {
-      if (_budget.check_error_is_not_403(errors.status)) {
-        _budget.clear_errors();
-        _.each(errors.responseJSON, _budget.add_error);
-        _budget.set_loading(false);
-      }
-    }
-  });
-
-  _budget.classes.Authorization = Backbone.Epoxy.Model.extend({
+  _skeleton.classes.Authorization = Backbone.Epoxy.Model.extend({
     defaults: {
       token_cookie: 'token',
       user_cookie: 'user',
@@ -422,7 +288,7 @@ window.budget = (function($){
     }
   });
 
-  _budget.classes.Credentials = Backbone.Epoxy.Model.extend({
+  _skeleton.classes.Credentials = Backbone.Epoxy.Model.extend({
     defaults: {
       email: null,
       password: null
@@ -437,50 +303,22 @@ window.budget = (function($){
     }
   });
 
-  _budget.classes.Transaction = Backbone.Epoxy.Model.extend({
-    url: 'transaction',
-    defaults: {
-      amount: 0
-    }
-  });
-
-  _budget.classes.Bujit = Backbone.Epoxy.Model.extend({
-    urlRoot: 'bujit',
-    defaults: {
-      amount: 0
-    }
-  });
-
-  _budget.classes.Bank = Backbone.Epoxy.Model.extend({
-    urlRoot: 'bank',
-    defaults: {
-      total: 0
-    }
-  });
-
-  _budget.classes.User = Backbone.Epoxy.Model.extend({
-    bujit: null,
-    bank: null,
-
+  _skeleton.classes.User = Backbone.Epoxy.Model.extend({
     initialize: function() {
       this.reset();
-      _.bindAll(this, 'reset', 'fetch', 'save');
-      $(_budget.authorization).on('authed', this.fetch);
-      $(_budget.authorization).on('deauthed', this.reset);
+      _.bindAll(this, 'reset', 'fetch');
+      $(_skeleton.authorization).on('authed', this.fetch);
+      $(_skeleton.authorization).on('deauthed', this.reset);
     },
     reset: function() {
       this.fetch.promise = null;
       this.save.promise = null;
-      this.bujit = new _budget.classes.Bujit();
-      this.bank = new _budget.classes.Bank();  
     },
     fetch: function() {
       var _user = this;
       var deferred = $.Deferred();
       $.get('user')
         .done(function(data) {
-          _user.bujit.set(data.bujit);
-          _user.bank.set(data.bank);
           deferred.resolve();
         })
         .fail(function(errors) {
@@ -491,14 +329,14 @@ window.budget = (function($){
     }
   });
 
-  return _budget;
+  return _skeleton;
 })(jQuery);
 
 $(document).ready(function() {
   $(window.applicationCache).on('updateready', function() {
     window.applicationCache.swapCache();
-    if (confirm('A new version of bujit.me is available! Load it?'))
+    if (confirm('A new version is available! Load it?'))
       window.location.reload();
   });
-  budget.init();
+  skeleton.init();
 });

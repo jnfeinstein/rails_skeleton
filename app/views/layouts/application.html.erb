@@ -5,7 +5,7 @@
   <html>
 <% end %>
   <head>
-    <title>bujit</title>
+    <title>skeleton</title>
     <%= stylesheet_link_tag    "application", media: "all" %>
     <%= javascript_include_tag "application" %>
     <!-- Stop pinch zoom on mobile devices -->
@@ -23,23 +23,14 @@
         <%= image_tag 'loader.gif', alt: "Loading" %>
       </div>
     </div>
-    <div class="template home">
+    <script type="text/html" class="template home">
       <%= render 'user/index' %>
-    </div>
-    <div class="template user new">
+    </script>
+    <script type="text/html" class="template user new">
       <%= render 'user/new' %>
-    </div>
-    <div class="template transaction new">
-      <%= render 'transaction/new' %>
-    </div>
-    <div class="template session new">
+    </script>
+    <script type="text/html" class="template session new">
       <%= render 'session/new' %>
-    </div>
-    <div class="template bujit edit">
-      <%= render 'bujit/edit' %>
-    </div>
-    <div class="template bank edit">
-      <%= render 'bank/edit' %>
-    </div>
+    </script>
   </body>
 </html>

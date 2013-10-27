@@ -11,48 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130918161720) do
+ActiveRecord::Schema.define(version: 20130909024838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "banks", force: true do |t|
-    t.integer  "user_id"
-    t.float    "total",      default: 0.0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "banks", ["user_id"], name: "index_banks_on_user_id", using: :btree
-
-  create_table "bujits", force: true do |t|
-    t.integer  "user_id"
-    t.float    "amount",        default: 0.0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "last_added_at"
-    t.integer  "interval",      default: 86400
-  end
-
-  add_index "bujits", ["user_id"], name: "index_bujits_on_user_id", using: :btree
-
-  create_table "transactions", force: true do |t|
-    t.float    "amount",       default: 0.0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
-    t.integer  "creator_id",                 null: false
-    t.string   "creator_type",               null: false
-  end
-
-  add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
-
   create_table "users", force: true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "email"
+    t.string   "email",      null: false
     t.string   "password"
     t.string   "token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
