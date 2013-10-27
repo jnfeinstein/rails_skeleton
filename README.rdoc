@@ -1,28 +1,19 @@
-== README
+== Skeleton
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a barebones single-page web-app with the following features:
 
-Things you may want to cover:
+* Rails 4 backend
+* PostgreSQL integration
+* jQuery/UnderscoreJS/BackboneJS/EpoxyJS/Bootstrap
+* Session-less
+* User authentication with tokens
+* Primed for Heroku/New Relic
+* Optimized for delivery of assets by CDN (i.e. Cloudflare)
 
-* Ruby version
+To get started:
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+* Do a find/replace of "Skeleton" and replace with "<Your app>".
+* Do a find/replace of "skeleton" and replace with "<your app>".
+* Create database "<your app>_development" in psql
+* Run "rake db:migrate"
+* Run "rails server" and you're off!
