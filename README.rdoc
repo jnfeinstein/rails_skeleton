@@ -14,6 +14,7 @@ To get started:
 
 * Do a find/replace of "Skeleton" and replace with "<Your app>".
 * Do a find/replace of "skeleton" and replace with "<your app>".
+* Run 'heroku config:set NEW_RELIC_APP_NAME="YOUR APP NAME GOES HERE"'
 * Create database "<your app>_development" in psql
 * Run "rake db:migrate"
 * Run "rails server" and you're off!
